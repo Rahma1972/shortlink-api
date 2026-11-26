@@ -1,5 +1,4 @@
 package com.example.shortlink;
-
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +10,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 @SpringBootTest
 @AutoConfigureMockMvc
 class UrlControllerTest {
     @Autowired
     MockMvc mvc;
-
     @Test
     void shortenRedirectAndStats() throws Exception {
         String body = mvc.perform(post("/shorten")
@@ -27,7 +25,6 @@ class UrlControllerTest {
                 .andExpect(jsonPath("$.code").isNotEmpty())
                 .andReturn().getResponse().getContentAsString();
         String code = JsonPath.read(body, "$.code");
-
         mvc.perform(get("/" + code))
                 .andExpect(status().isFound())
                 .andExpect(header().string("Location", "https://example.com"));
@@ -36,7 +33,6 @@ class UrlControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.clicks").value(1));
     }
-
     @Test
     void rejectsNonHttpUrl() throws Exception {
         mvc.perform(post("/shorten")
@@ -44,12 +40,10 @@ class UrlControllerTest {
                         .content("{\"url\":\"javascript:alert(1)\"}"))
                 .andExpect(status().isBadRequest());
     }
-
     @Test
     void unknownCodeReturns404() throws Exception {
         mvc.perform(get("/nope123")).andExpect(status().isNotFound());
     }
-
 
     @Test
     void customAliasThenConflict() throws Exception {
