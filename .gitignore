@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+Dockerfile.local
+Dockerfile.local.dockerignore
+
+Dockerfile.local
+Dockerfile.local.dockerignore
