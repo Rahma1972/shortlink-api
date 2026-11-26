@@ -1,0 +1,6 @@
+services:
+  shortlink:
+    build: .
+    image: shortlink-api:local
+    ports:
+      - "8080:8080"
